@@ -10,6 +10,66 @@
 
 @implementation FISAppDelegate
 
+- (NSString *)shortenLocationNameWithLocation:(NSDictionary *)location
+                                      ToCount:(NSInteger)count
+{
+    NSString *locationName = location[@"name"];
+    if (count >= 0) {
+        return [locationName substringToIndex:count];
+    }
+    return locationName;
+}
+
+- (NSDictionary *)createLocationWithName:(NSString *)location
+                                Latitude:(NSNumber *)latitude
+                               Longitude:(NSNumber *)longitude
+{
+    NSDictionary *locationDictionary = @{@"name":location,
+                                         @"latitude":latitude,
+                                         @"longitude":longitude};
+    return locationDictionary;
+}
+
+- (NSArray *)getLocationNamesWithLocations:(NSArray *)locations
+{
+    NSMutableArray *locationNamesArray = [@[] mutableCopy];
+    for (NSDictionary *location in locations) {
+        [locationNamesArray addObject:location[@"name"]];
+    }
+    return [locationNamesArray copy];
+}
+
+- (BOOL)verifyLocation:(NSDictionary *)location
+{
+    if ([location count] == 3) {
+        if ([location[@"name"] isEqualToString:@"Empire State Building"] &&
+            [location[@"latitude"] isEqualToNumber:@23.432] &&
+            [location[@"longitude"] isEqualToNumber:@-34.34]) {
+            return YES;
+        } else if ([location[@"name"] isEqualToString:@"The Flatiron School"] &&
+                   [location[@"latitude"] isEqualToNumber:@34.432] &&
+                   [location[@"longitude"] isEqualToNumber:@-23.67]) {
+            return YES;
+        } else if ([location[@"name"] isEqualToString:@"Statue Of Liberty"] &&
+                   [location[@"latitude"] isEqualToNumber:@78.34] &&
+                   [location[@"longitude"] isEqualToNumber:@92.42]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSDictionary *)searchForLocationName:(NSString *)location
+                            inLocations:(NSArray *)locations
+{
+    for (NSDictionary *locationDictionary in locations) {
+        if ([locationDictionary[@"name"] isEqualToString:location]) {
+            return locationDictionary;
+        }
+    }
+    return nil;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
